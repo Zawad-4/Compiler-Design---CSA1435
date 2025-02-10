@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <string.h>
+
+void eliminateLeftRecursion(char *productions[], int n) {
+    for (int i = 0; i < n; i++) {
+        char *prod = productions[i];
+        char nonTerminal = prod[0];
+        char *alpha = NULL;
+        char *beta = NULL;
+        int j = 3; // Skip the non-terminal and arrow
+
+        // Check for left recursion
+        if (prod[j] == nonTerminal) {
+            alpha = &prod[j]; // Left recursive part
+            beta = (char *)malloc(strlen(prod) + 2); // Allocate memory for new production
+            sprintf(beta, "%s'", &prod[0]); // New non-terminal
+            printf("%c -> %s | %s\n", nonTerminal, beta, alpha);
+        } else {
+            printf("%c -> %s\n", nonTerminal, prod + 3); // Non-left recursive production
+        }
+    }
+}
+
+int main() {
+    char *productions[] = {
+        "A -> A alpha | beta",
+        "B -> beta",
+        "C -> C gamma | delta"
+    };
+    int n = sizeof(productions) / sizeof(productions[0]);
+    
+    printf("Eliminated Left Recursion:\n");
+    eliminateLeftRecursion(productions, n);
+    
+    return 0;
+}
